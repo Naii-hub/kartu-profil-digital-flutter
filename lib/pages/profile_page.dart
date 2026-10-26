@@ -22,6 +22,14 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+    void _logout() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.splash,
+      (route) => false,
+    );
+  }
+
   Future<void> _openEditProfile() async {
     final result = await Navigator.pushNamed(
       context,
@@ -37,16 +45,22 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kartu Profil Digital'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            tooltip: 'Edit profil',
-            onPressed: _openEditProfile, // TODO: Lab 3
-          ),
-        ],
-      ),
+    appBar: AppBar(
+      title: const Text('Kartu Profil Digital'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.edit),
+          tooltip: 'Edit profil',
+          onPressed: _openEditProfile,
+        ),
+        IconButton(
+          icon: const Icon(Icons.logout),
+          tooltip: 'Keluar',
+          onPressed: _logout,
+        ),
+      ],
+    ),
+
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
