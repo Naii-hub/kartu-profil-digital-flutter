@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/dummy_data.dart';
 import '../models/models.dart';
-import 'project_detail_page.dart';
-import 'edit_profile_page.dart';
+import '../app/app_routes.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,29 +14,25 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Profile _profile = defaultProfile;
 
-  // Tambahkan di dalam class _ProfilePageState
-  void _openProjectDetail(project) {
-    Navigator.push(
+  void _openProjectDetail(Project project) {
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => ProjectDetailPage(project: project),
-      ),
+      AppRoutes.projectDetail,
+      arguments: project, // dikirim sebagai arguments
     );
   }
 
   Future<void> _openEditProfile() async {
-  // await = tunggu sampai halaman Edit ditutup
-  final result = await Navigator.push<Profile>(
-    context,
-    MaterialPageRoute(
-      builder: (context) => EditProfilePage(profile: _profile),
-    ),
-  );
+    final result = await Navigator.pushNamed(
+      context,
+      AppRoutes.editProfile,
+      arguments: _profile,
+    );
 
-  // Dua pengaman: widget masih aktif? ada hasil (tidak dibatalkan)?
-  if (!mounted || result == null) return;
+   // `is Profile` = cek tipe sekaligus cek null
+  if (!mounted || result is! Profile) return;
   setState(() => _profile = result);
-}
+  }
 
   @override
   Widget build(BuildContext context) {
