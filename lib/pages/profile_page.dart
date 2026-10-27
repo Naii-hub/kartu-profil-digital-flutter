@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../data/dummy_data.dart';
 import '../models/models.dart';
@@ -15,31 +16,21 @@ class _ProfilePageState extends State<ProfilePage> {
   Profile _profile = defaultProfile;
 
   void _openProjectDetail(Project project) {
-    Navigator.pushNamed(
-      context,
-      AppRoutes.projectDetail,
-      arguments: project, // dikirim sebagai arguments
-    );
-  }
-
-    void _logout() {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AppRoutes.splash,
-      (route) => false,
-    );
+    context.push(AppRoutes.projectDetail(project.id)); // ID di path
   }
 
   Future<void> _openEditProfile() async {
-    final result = await Navigator.pushNamed(
-      context,
+    // push<Profile>: hasil sudah bertipe Profile?, tidak perlu `is!`
+    final result = await context.push<Profile>(
       AppRoutes.editProfile,
-      arguments: _profile,
+      extra: _profile, // objek dikirim lewat extra
     );
+    if (!mounted || result == null) return;
+    setState(() => _profile = result);
+  }
 
-   // `is Profile` = cek tipe sekaligus cek null
-  if (!mounted || result is! Profile) return;
-  setState(() => _profile = result);
+  void _logout() {
+    context.go(AppRoutes.splash); // stack dibersihkan, tanpa RemoveUntil
   }
 
   @override
